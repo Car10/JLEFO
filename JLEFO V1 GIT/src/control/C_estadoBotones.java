@@ -10,5 +10,5 @@ package control;
  * @author herma
  */
 public class C_estadoBotones {
-    
+    //Puede que se implemente o no
 }

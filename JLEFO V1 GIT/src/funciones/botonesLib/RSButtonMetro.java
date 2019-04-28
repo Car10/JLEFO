@@ -46,7 +46,7 @@ public class RSButtonMetro extends JButton implements MouseListener, MouseMotion
      * Constructor de clase
      */
     @SuppressWarnings("LeakingThisInConstructor")
-    public RSButtonMetro() {
+    public RSButtonMetro(String text) {
         this.setFont(f);
         this.setPreferredSize(new Dimension(150, 35));
         this.setSize(new Dimension(150, 35));
@@ -59,6 +59,7 @@ public class RSButtonMetro extends JButton implements MouseListener, MouseMotion
         this.setForeground(this.colorTextNormal);
         this.setOpaque(true);
         this.setVisible(true);
+        this.setText(text);
         this.addMouseListener(this);
         this.addMouseMotionListener(this);
     }
