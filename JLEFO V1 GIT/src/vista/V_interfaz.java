@@ -14,10 +14,9 @@ import java.awt.Toolkit;
 import javax.swing.*;
 import static funciones.NmComponentes.*;
 import java.awt.Color;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
 import static java.awt.event.KeyEvent.*;
-import java.util.ArrayList;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  *
@@ -41,90 +40,14 @@ public class V_interfaz extends JFrame {
         tabs = new V_tabs();
         tabs.setVisible(false);
         slideMenu = new V_slideMenu(tabs);
-        slideMenu.setVisible(true);
+        slideMenu.setVisible(false);
 
-        ctrl = new C_interfaz(tabs, slideMenu, contenedor, tabs, file);
+        ctrl = new C_interfaz(this, tabs, slideMenu, contenedor, tabs, file);
 
         componentes();
 
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            @Override
-            public void windowClosing(java.awt.event.WindowEvent evt) {
-                close();
-            }
-
-            private void close() {
-//                Vs_lienzo save = new LienzoFromScroll().obtener(Tabs);
-//        Mecanismo m = new Mecanismo();
-//        if (Tabs.getPanel() != null) {
-//
-//            int close = 0;
-//
-//            for (int i = 0; i < indicePestaña.getIndice(); i++) {
-//                Vs_lienzo comprobar = new LienzoFromScroll().obtenerEn(i, Tabs);
-//                if (comprobar.isCambios()) {
-//                    close++;
-//                }
-//
-//            }
-//
-//            if (close == 0) {
-//                //eliminar directorios y archivos de los tabs existentes
-//                int numTabs = Tabs.getTabCount();
-//                ArrayList<Vs_lienzo> lienzos = new ArrayList<>();
-//                for (int i = 0; i < numTabs; i++) {
-//                    lienzos.add(new LienzoFromScroll().obtenerEn(i, Tabs));
-//                }
-//                for (Vs_lienzo c : lienzos) {
-//                    Vs_lienzo v = (Vs_lienzo) c;
-//                    if (v.getTipoPanel() == "af") {
-//                        m.deleteRootFolder(v.getName());
-//                    }
-//
-//                }
-//                m.deleteBuffer();
-//                System.exit(0);
-//            }
-//
-//            int resp = JOptionPane.showConfirmDialog(
-//                    rootPane, "Estás a punto de cerrar " + close + " pestañas sin cambios guardados. \n ¿Quieres continuar?",
-//                    "Salir", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-//            if (JOptionPane.OK_OPTION == resp) {
-//                //eliminar directorios y archivos de los tabs existentes
-//                int numTabs = Tabs.getTabCount();
-//                ArrayList<Vs_lienzo> lienzos = new ArrayList<>();
-//                for (int i = 0; i < numTabs; i++) {
-//                    lienzos.add(new LienzoFromScroll().obtenerEn(i, Tabs));
-//                }
-//                for (Vs_lienzo c : lienzos) {
-//                    Vs_lienzo v = (Vs_lienzo) c;
-//                    if (v.getTipoPanel() == "af") {
-//                        m.deleteRootFolder(v.getName());
-//                    }
-//
-//                }
-//                m.deleteBuffer();
-//                System.exit(0);
-//            }
-//            if (JOptionPane.NO_OPTION == resp) {
-//                return;
-//            }
-//
-//        }
-//        m.deleteBuffer();
-//        System.exit(0);
-
-            }
-
-        });
-
-        addWindowStateListener(new java.awt.event.WindowAdapter() {
-            @Override
-            public void windowStateChanged(java.awt.event.WindowEvent evt) {
-                C_interfaz.deslizarMenu("general");
-
-            }
-        });
+        addWindowListener(ctrl);
+        addWindowStateListener(ctrl);
     }
 
     private void componentes() {
@@ -137,6 +60,13 @@ public class V_interfaz extends JFrame {
                 .getResource(rutaIconos + "automata-16.png")));
         af.setName(AF);
         af.addActionListener(ctrl);
+        af.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                super.mousePressed(e);
+                controlVisual(true, false, false, false);
+            }
+        });
         nuevo.add(af);
 
         er.setAccelerator(KeyStroke.getKeyStroke(VK_E, SHIFT_MASK | CTRL_MASK));
@@ -202,19 +132,19 @@ public class V_interfaz extends JFrame {
         alejar.addActionListener(ctrl);
         editar.add(alejar);
 
-        tutoriales.setName("tutoriales");
+        tutoriales.setName(TUTORIALES);
         tutoriales.addActionListener(ctrl);
         ayuda.add(tutoriales);
 
-        manual.setName("manual");
+        manual.setName(MANUAL);
         manual.addActionListener(ctrl);
         ayuda.add(manual);
 
-        ejercicios.setName("ejercicios");
+        ejercicios.setName(EJERCICIOS);
         ejercicios.addActionListener(ctrl);
         ayuda.add(ejercicios);
 
-        acercaDe.setName("acercaDe");
+        acercaDe.setName(ACERCADE);
         acercaDe.addActionListener(ctrl);
         ayuda.add(acercaDe);
 
@@ -333,6 +263,16 @@ public class V_interfaz extends JFrame {
         pack();
     }
 
+    public void controlVisual(boolean b1, boolean b2, boolean b3, boolean b4) {
+        menu.setEnabled(b1);
+        b_guardar.setEnabled(b2);
+        guardar.setEnabled(b2);
+        b_deshacer.setEnabled(b3);
+        deshacer.setEnabled(b3);
+        b_rehacer.setEnabled(b4);
+        rehacer.setEnabled(b4);
+    }
+
     //controlador
     private C_interfaz ctrl;
 
@@ -347,13 +287,13 @@ public class V_interfaz extends JFrame {
     private final JMenuItem af = new JMenuItem(AF);
     private final JMenuItem er = new JMenuItem(ER);
     private final JMenuItem abrir = new JMenuItem(ABRIR);
-    private final JMenuItem guardar = new JMenuItem(GUARDAR);
+    public static final JMenuItem guardar = new JMenuItem(GUARDAR);
     private final JMenuItem guardarComo = new JMenuItem(GUARDARCOMO);
-    private final JMenuItem deshacer = new JMenuItem(DESHACER);
-    private final JMenuItem rehacer = new JMenuItem(REHACER);
+    public static final JMenuItem deshacer = new JMenuItem(DESHACER);
+    public static final JMenuItem rehacer = new JMenuItem(REHACER);
     private final JMenuItem acercar = new JMenuItem(ACERCAR);
     private final JMenuItem alejar = new JMenuItem(ALEJAR);
-    private final JMenuItem tutoriales = new JMenuItem(TUTOTIALES);
+    private final JMenuItem tutoriales = new JMenuItem(TUTORIALES);
     private final JMenuItem manual = new JMenuItem(MANUAL);
     private final JMenuItem ejercicios = new JMenuItem(EJERCICIOS);
     private final JMenuItem acercaDe = new JMenuItem(ACERCADE);
@@ -361,12 +301,12 @@ public class V_interfaz extends JFrame {
     /*Barra de herramientas*/
     private final JToolBar barraHerr = new JToolBar();
     private final JPanel p_barraHerr = new JPanel();
-    private final JButton menu = new JButton();
-    private final JButton b_deshacer = new JButton();
+    public static final JButton menu = new JButton();
+    public static final JButton b_deshacer = new JButton();
     private final JButton imagen = new JButton();
     private final JButton imprimir = new JButton();
-    private final JButton b_rehacer = new JButton();
-    private final JButton b_guardar = new JButton();
+    public static final JButton b_rehacer = new JButton();
+    public static final JButton b_guardar = new JButton();
     private final JButton b_acercar = new JButton();
     private final JButton b_alejar = new JButton();
     private final JPopupMenu.Separator separador1 = new JPopupMenu.Separator();

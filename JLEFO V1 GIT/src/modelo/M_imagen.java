@@ -1,222 +1,50 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package vista;
+package modelo;
 
-import control.C_automata;
+import static funciones.NmComponentes.AF;
+import funciones.orden.Ordenador;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import javax.swing.JPanel;
-import static funciones.NmComponentes.*;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.geom.Line2D;
 import java.awt.geom.QuadCurve2D;
-import javax.swing.BorderFactory;
-import javax.swing.GroupLayout;
-import modelo.M_estado;
-import modelo.M_transicion;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
- * @author herma
+ * @authors Alexis, José Carlos, Margarito
  */
-public class V_lienzo extends JPanel {
+public class M_imagen extends JPanel {
 
-    private String tipoPanel;
-    private C_automata ctrl;
-    //private C_rastreo ctrl2;
-    private V_rastreo rastreo;
-
-    //dibujado
+    private double factor = 1;
     private int ancho;
     private int alto;
-    private double factor = 1;
-    private Point inicioLinea, finLinea;
-    private String archivo;
-    private int idNombre;
     private int diametro = 50;
-    private boolean analizar = false;
-    private boolean monitor = false;
-    private boolean saveJLEFO = false;
-    private boolean vs_Rastreo_Creada = false;
-    private boolean guardado = false;
+    private List<M_estado> estados;
+    private List<M_transicion> transiciones;
+    private Dimension d;
+    private Rectangle area;
+    private Point p;
 
-    /**
-     * Constructor
-     *
-     * @param tipoPanel tipo de panel ER o AF
-     */
-    V_lienzo(String tipoPanel) {
-        this.tipoPanel = tipoPanel;
-        if (tipoPanel.equals(AF)) {
-            rastreo = new V_rastreo();
-            ctrl = new C_automata(this, rastreo);
-            rastreo.cargarControlador(ctrl);
-            layouts();
-        } else {
-            add(new V_panelER());
-            setBackground(new Color(53, 60, 81));
-            revalidate();
-        }
+    public Point getP() {
+        return p;
     }
 
-    /**
-     *
-     * @return factor de incremento
-     */
-    public double getFactor() {
-        return factor;
+    public M_imagen(List<M_estado> estados, List<M_transicion> transiciones) {
+        setSize(400, 300);
+        this.estados = estados;
+        this.transiciones = transiciones;
+        setBackground(Color.WHITE);
     }
 
-    /**
-     * Modifica el factor de dibujado
-     *
-     * @param factor valor del factor proporción
-     */
-    public void setFactor(double factor) {
-        this.factor = factor;
-    }
-
-    /**
-     *
-     * @return si se ha guardado el proyecto
-     */
-    public boolean isGuardado() {
-        return guardado;
-    }
-
-    /**
-     * Inidicar cuando se guarde el proyecto
-     *
-     * @param guardado TRUE guardado - FALSE no guardado
-     */
-    public void setGuardado(boolean guardado) {
-        this.guardado = guardado;
-    }
-
-    //no se para que es
-    public void setAnalizar(boolean analizar) {
-        this.analizar = analizar;
-    }
-
-    public boolean isAnalizar() {
-        return analizar;
-    }
-
-    /**
-     *
-     * @return Diametro del circulo
-     */
-    public int getDiametro() {
-        return diametro;
-    }
-
-    /**
-     * Modifica el diametro
-     *
-     * @param diametro nuevo diametro
-     */
-    public void setDiametro(int diametro) {
-        this.diametro = diametro;
-    }
-
-    /**
-     * Tipo de panel agregado al tabs
-     *
-     * @return panel ER o AF
-     */
-    public String getTipoPanel() {
-        return tipoPanel;
-    }
-
-    /**
-     * Identificador del número de proyecto
-     *
-     * @param idNombre número del proyecto
-     */
-    public void setIdNombre(int idNombre) {
-        this.idNombre = idNombre;
-    }
-
-    /**
-     *
-     * @return número del proyecto actual
-     */
-    public int getIdNombre() {
-        return this.idNombre;
-    }
-
-    /**
-     * Modifica la ruta del archivo perteneciente al lienzo
-     *
-     * @param archivo ruta del archivo
-     */
-    public void setRutaArchivo(String archivo) {
-        this.archivo = archivo;
-    }
-
-    /**
-     *
-     * @return ruta del archivo asociado al lienzo
-     */
-    public String getRutaArchivo() {
-        return this.archivo;
-    }
-
-    /**
-     * Inicia o detiene el Thread de monitoreo para el archivo abierto
-     *
-     * @param monitor true para detenerlo - false para mantenerlo
-     */
-    public void setMonitor(boolean monitor) {
-        this.monitor = monitor;
-    }
-
-    /**
-     *
-     * @return estado del monitor activo o detenido
-     */
-    public boolean isMonitor() {
-        return this.monitor;
-    }
-
-    /**
-     *
-     * @return punto inicial de la linea de transicion-direccion
-     */
-    public Point getInicioLinea() {
-        return inicioLinea;
-    }
-
-    /**
-     *
-     * @param p nueva ubicación
-     */
-    public void setInicioLinea(Point p) {
-        this.inicioLinea = p;
-    }
-
-    /**
-     *
-     * @return punto final de la linea de transicion-direccion
-     */
-    public Point getFinLinea() {
-        return finLinea;
-    }
-
-    /**
-     *
-     * @param p nueva ubicacion
-     */
-    public void setFinLinea(Point p) {
-        this.finLinea = p;
+    public M_imagen() {
     }
 
     @Override
@@ -231,44 +59,38 @@ public class V_lienzo extends JPanel {
         setPreferredSize(new Dimension(ancho, alto));
         revalidate();
 
-        if (tipoPanel.equals(AF)) {
-            for (M_transicion trans : ctrl.getTransiciones()) {
-                dibujarTransicion(g2, trans);
-            }
+        for (M_transicion trans : transiciones) {
+            dibujarTransicion(g2, trans);
+        }
 
-            for (M_estado estado : ctrl.getEstados()) {
-                switch (estado.getTipo()) {
-                    case "Edo-Inicial":
+        for (M_estado estado : estados) {
+            switch (estado.getTipo()) {
+                case "Edo-Inicial":
+                    dibujarEdoInic(g2, estado);
+                    break;
+
+                case "Edo-Transicion":
+                    if (estado.getIdEstado() == 0) {
                         dibujarEdoInic(g2, estado);
-                        break;
 
-                    case "Edo-Transicion":
-                        if (estado.getIdEstado() == 0) {
-                            dibujarEdoInic(g2, estado);
+                    } else {
+                        dibujarEdoTrans(g2, estado);
+                    }
+                    break;
 
-                        } else {
-                            dibujarEdoTrans(g2, estado);
-                        }
-                        break;
-
-                    case "Edo-Aceptacion":
-                        if (estado.getIdEstado() == 0) {
-                            dibujarEdoInic(g2, estado);
-                        } else {
-                            dibujarEdoTrans(g2, estado);
-                        }
-                        break;
-                }
+                case "Edo-Aceptacion":
+                    if (estado.getIdEstado() == 0) {
+                        dibujarEdoInic(g2, estado);
+                    } else {
+                        dibujarEdoTrans(g2, estado);
+                    }
+                    break;
             }
         }
 
-        if (inicioLinea != null && finLinea != null) {
-            g2.setColor(new Color(85, 85, 85));
-            g2.draw(new Line2D.Float(inicioLinea.x, inicioLinea.y,
-                    finLinea.x, finLinea.y));
-        }
         factor = 1;
-
+        g2.setColor(Color.black);
+        g2.drawRect(area.x + 2, area.y + 2, area.width - 4, area.height - 4);
     }
 
     /**
@@ -520,24 +342,34 @@ public class V_lienzo extends JPanel {
         t.setYb(tyb);
     }
 
-    private void layouts() {
-        setBackground(Color.white);
-        setBorder(BorderFactory.createLineBorder(new Color(204, 204, 204)));
+    public Rectangle area() {
+        ArrayList coordX = new ArrayList();
+        ArrayList coordY = new ArrayList();
+        for (M_estado edo : estados) {
+            coordX.add(edo.getX());
+            coordY.add(edo.getY());
+        }
+        //ordenar de modo ascendente
+        new Ordenador().quicksort(coordX);
+        new Ordenador().quicksort(coordY);
 
-        add(rastreo);
-        GroupLayout layout = new GroupLayout(this);
-        setLayout(layout);
+        p = new Point((int) coordX.get(0) - 60, (int) coordY.get(0) - 80);
+        if (p.y < 0) {
+            p.y = 0;
+        } else if (p.x < 0) {
+            p.x = 0;
+        }
 
-        //Eventos del mouse
-        addMouseListener(ctrl);
-        addMouseMotionListener(ctrl);
-    }
+        d = new Dimension((int) coordX.get(coordX.size() - 1),
+                (int) coordY.get(coordY.size() - 1));
 
-    /**
-     * Iniciar analisis del automata
-     */
-    public void rastreo() {
-        ctrl.rastrear();
+        Dimension d2 = new Dimension(((int) coordX.get(coordX.size() - 1) - (int) coordX.get(0)) + 100,
+                ((int) coordY.get(coordY.size() - 1) - (int) coordY.get(0)) + 140);
+
+        area = new Rectangle(p, d2);
+        setSize(d.width + 100, d.height + 180);
+
+        return area;
     }
 
 }

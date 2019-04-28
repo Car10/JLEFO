@@ -48,7 +48,6 @@ public class V_slideMenu extends JPanel {
 
         estado.setIcon(new ImageIcon(getClass()
                 .getResource(rutaIconos + "automata-24.png")));
-        estado.setText("           ESTADO");
         estado.setColorHover(new Color(217, 189, 107));
         estado.setFocusable(false);
         estado.addActionListener(ctrl);
@@ -62,7 +61,6 @@ public class V_slideMenu extends JPanel {
 
         transicion.setIcon(new ImageIcon(getClass()
                 .getResource(rutaIconos + "transicion-24.png")));
-        transicion.setText("   TRANSICIÓN");
         transicion.setColorHover(new Color(217, 189, 107));
         transicion.setFocusable(false);
         transicion.addActionListener(ctrl);
@@ -76,7 +74,6 @@ public class V_slideMenu extends JPanel {
 
         seleccionar.setIcon(new ImageIcon(getClass()
                 .getResource(rutaIconos + "seleccionar-24.png")));
-        seleccionar.setText("SELECCIONAR");
         seleccionar.setColorHover(new Color(217, 189, 107));
         seleccionar.setFocusable(false);
         seleccionar.addActionListener(ctrl);
@@ -90,7 +87,6 @@ public class V_slideMenu extends JPanel {
 
         analizar.setIcon(new ImageIcon(getClass()
                 .getResource(rutaIconos + "analizar-24.png")));
-        analizar.setText("        ANALIZAR");
         analizar.setColorHover(new Color(217, 189, 107));
         analizar.setFocusable(false);
         analizar.addActionListener(ctrl);
@@ -119,7 +115,6 @@ public class V_slideMenu extends JPanel {
 
     private void controlAction(MouseEvent e) {
         Component cmp = (Component) e.getSource();
-        System.out.println(cmp.getName());
         switch (cmp.getName()) {
             case ESTADO:
                 estado.setSelected(true);
@@ -168,10 +163,10 @@ public class V_slideMenu extends JPanel {
         }
     }
 
-    private final RSButtonMetro analizar = new RSButtonMetro();
-    private final RSButtonMetro estado = new RSButtonMetro();
-    private final RSButtonMetro seleccionar = new RSButtonMetro();
-    private final RSButtonMetro transicion = new RSButtonMetro();
+    private final RSButtonMetro analizar = new RSButtonMetro("        ANALIZAR");
+    private final RSButtonMetro estado = new RSButtonMetro("           ESTADO");
+    private final RSButtonMetro seleccionar = new RSButtonMetro("SELECCIONAR");
+    private final RSButtonMetro transicion = new RSButtonMetro("   TRANSICIÓN");
     private final JTextPane info = new JTextPane();
     private final JScrollPane scroll = new JScrollPane();
 
