@@ -31,7 +31,6 @@ public class V_lienzo extends JPanel {
 
     private String tipoPanel;
     private C_automata ctrl;
-    //private C_rastreo ctrl2;
     private V_rastreo rastreo;
 
     //dibujado

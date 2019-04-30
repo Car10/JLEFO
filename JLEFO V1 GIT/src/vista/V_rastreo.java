@@ -37,7 +37,7 @@ public class V_rastreo extends JInternalFrame {
         componentes();
     }
 
-     void cargarControlador(C_automata ctrl) {
+    void cargarControlador(C_automata ctrl) {
         this.ctrl = ctrl;
         b_Afd.addActionListener(ctrl);
         b_Ordenar_cadenas.addActionListener(ctrl);
@@ -45,7 +45,7 @@ public class V_rastreo extends JInternalFrame {
         slider.addMouseListener(ctrl);
         tablaCadenas.addMouseListener(ctrl);
     }
-    
+
     public String getEstatus() {
         return tablaCadenas.getColumnName(tablaCadenas.getSelectedColumn());
     }
@@ -55,7 +55,6 @@ public class V_rastreo extends JInternalFrame {
     }
 
     public void setCadena(String cad) {
-        System.out.println(cad);
         cadena.setText(cad);
     }
 
@@ -95,6 +94,8 @@ public class V_rastreo extends JInternalFrame {
 
         b_Ordenar_cadenas.setName(ORDENAR);
         b_Ordenar_cadenas.setToolTipText("Ordenar cadenas");
+        b_Ordenar_cadenas.setIcon(new ImageIcon(getClass()
+                .getResource(rutaIcono + "ordenar-16.png")));
         b_Ordenar_cadenas.addActionListener(ctrl);
 
         b_rastreo_paso.setName(PASO_A_PASO);
@@ -136,6 +137,7 @@ public class V_rastreo extends JInternalFrame {
         p_Scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         p_Scroll.setAutoscrolls(true);
         p_Scroll.setPreferredSize(new Dimension(520, 350));
+        p_Scroll.getVerticalScrollBar().setUnitIncrement(15);
 
         p_Contenedor.setAutoscrolls(true);
         p_Contenedor.setBorder(createLineBorder(new Color(204, 204, 204)));
@@ -297,6 +299,16 @@ public class V_rastreo extends JInternalFrame {
         }
     }
 
+    private boolean fin = false;
+    
+    public boolean getFin(){
+        return fin;
+    }
+    
+    public void setFin(boolean fin){
+        this.fin = fin;
+    }
+
     private void repintar(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
@@ -319,6 +331,31 @@ public class V_rastreo extends JInternalFrame {
                 x += 14;
             }
             posicion = -1;
+            if (fin) {
+                switch (ctrl.getEstatusCadena()) {
+                    case "ACEPTA":
+                        g2.setColor(M_colores.FINAL_ESTADO);
+                        x = 10;
+                        for (int i = 0; i < cadena.getEndIndex(); i++) {
+                            cadena.setIndex(i);
+                            g2.drawString(String.valueOf(cadena.current()), x,
+                                    panelCadena.getHeight() - 10);
+                            x += 14;
+                        }
+                        break;
+                    case "NO ACEPTA":
+                        g2.setColor(M_colores.NOFINAL_ESTADO);
+                        x = 10;
+                        for (int i = 0; i < cadena.getEndIndex(); i++) {
+                            cadena.setIndex(i);
+                            g2.drawString(String.valueOf(cadena.current()), x,
+                                    panelCadena.getHeight() - 10);
+                            x += 14;
+                        }
+                        break;
+                }
+
+            }
         }
     }
 
