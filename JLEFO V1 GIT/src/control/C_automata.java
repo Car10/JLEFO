@@ -5,7 +5,6 @@
  */
 package control;
 
-import funciones.LienzoFromScroll;
 import funciones.ctrlZ_Y.Control;
 import funciones.orden.Ordenador;
 import java.awt.Point;
@@ -26,6 +25,7 @@ import java.awt.Component;
 import java.io.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -425,6 +425,7 @@ public class C_automata extends MouseAdapter implements ActionListener {
                     cadena = rastreo.getCadena();
                     estatusCadena = rastreo.getEstatus();
                     rastreo.setCadena(cadena);
+                    rastreo.setFin(false);
                     rastreo.getPanel().repaint();
                     break;
                 case SLIDER:
@@ -706,6 +707,10 @@ public class C_automata extends MouseAdapter implements ActionListener {
     long intervalo = 1600;
     Random aleatorio = new Random(System.currentTimeMillis());
 
+    public String getEstatusCadena(){
+        return estatusCadena;
+    }
+    
     public void rastrear() {
         btn_order = true;
         valido = new ArrayList();
@@ -1248,6 +1253,8 @@ public class C_automata extends MouseAdapter implements ActionListener {
 
             btn_order = false;
             rastreo.getB_Ordenar_cadenas().setText("Desordenar");
+            rastreo.getB_Ordenar_cadenas().setIcon(new ImageIcon(getClass()
+                    .getResource("/img_icon/aleatorio-16.png")));
         } else {
             //Desordena cadenas validas
             if (!valido.isEmpty()) {
@@ -1299,6 +1306,8 @@ public class C_automata extends MouseAdapter implements ActionListener {
 
             btn_order = true;
             rastreo.getB_Ordenar_cadenas().setText("Ordenar");
+            rastreo.getB_Ordenar_cadenas().setIcon(new ImageIcon(getClass()
+                    .getResource("/img_icon/ordenar-16.png")));
         }
     }
 

@@ -6,11 +6,9 @@
 package funciones.backtracking;
 
 import control.C_automata;
-import funciones.LienzoFromScroll;
 import java.awt.Color;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -21,7 +19,6 @@ import modelo.M_nodo;
 import modelo.M_transicion;
 import vista.V_lienzo;
 import vista.V_rastreo;
-import vista.V_tabs;
 
 /**
  *
@@ -63,7 +60,6 @@ public class Rastreador implements Runnable {
         MouseListener[] ml = lienzo.getMouseListeners();
         C_automata cl = (C_automata) ml[0];
         List<M_estado> estados = cl.getEstados();
-        System.out.println(Arrays.toString(cl.getEstados().toArray()));
         List<M_transicion> transiciones = cl.getTransiciones();
         lienzo.setAnalizar(true);
 
@@ -129,6 +125,7 @@ public class Rastreador implements Runnable {
                                 colorearEstado(e, lienzo, M_colores.FINAL_ESTADO,
                                         M_colores.FINAL_CONTORNO,
                                         M_colores.FINAL_IDESTADO);
+                                interfaz.setFin(true);
                                 break;
                             }
                         }
@@ -139,6 +136,7 @@ public class Rastreador implements Runnable {
                                 colorearEstado(e, lienzo, M_colores.NOFINAL_ESTADO,
                                         M_colores.NOFINAL_CONTORNO,
                                         M_colores.NOFINAL_IDESTADO);
+                                interfaz.setFin(true);
                                 break;
                             }
                         }
